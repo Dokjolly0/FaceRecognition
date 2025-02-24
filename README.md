@@ -1,44 +1,11 @@
-# FAQ : cv2.putText()
+# Lezione ITS
 
-The syntax is
+In questa breve introduzione utilizzeremo OpenCV, un software gratuito, per effettuare il riconoscimento facciale di un individuo
 
-```python
-cv.putText(img, text, org, fontFace, fontScale, color, thickness, lineType, bottomLeftOrigin)
-```
+**Step da seguire**
+ - Creazione di un dataset: servirà una raccolta di foto quanto più ampia possibile per poter addestrare la nostra intelligenza artificiare nel riconoscerci;
+ - Una volta creato il nostro dataset dovremo creare il nostro modello vero e proprio: un file che verrà poi utilizzato dalla nostra IA per riconoscerci più rapidamente, senza dover ricorrere alle foto
+ - Si potrà infine eseguire il riconoscimento del nostro volto
 
-**img** = Image to display
-
-**text** = Text to display on the image
-
-**org** = Origin co-ordinates => **(x, y)**
-
-**fontFace** = Type of Hershey Font Face to use
-
-> **Available Hershey Font Faces :**
-
-- FONT_HERSHEY_SIMPLEX = 0
-- FONT_HERSHEY_PLAIN = 1
-- FONT_HERSHEY_DUPLEX = 2
-- FONT_HERSHEY_COMPLEX = 3
-- FONT_HERSHEY_TRIPLEX = 4
-- FONT_HERSHEY_COMPLEX_SMALL = 5
-- FONT_HERSHEY_SCRIPT_SIMPLEX = 6
-- FONT_HERSHEY_SCRIPT_COMPLEX = 7
-- FONT_ITALIC = 16
-
-**fontScale** = Size of the text
-
-**color** = Color of the text in RGB values
-
-**thicknes** = Text/Font Thickness
-
-**lineType** = Which line type to use
-
-> **Available Line Types :**
-
-- FILLED = -1 (Filled)
-- LINE_4 = 4 (4 Connected Line)
-- LINE_8 = 8 (8 Connected Line)
-- LINE_AA = 16 (Anti-Aliased Line)
-
-**bottomLeftOrigin** = Origin of the text is set to the bottom left, if set to **True**. Default is **False**
+**Referenzee**
+ Per sviluppare questa DEMO è stato utilizzato il linguaggio di programmazione [Python](https://www.python.org/) e [OpenCV](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html) 
