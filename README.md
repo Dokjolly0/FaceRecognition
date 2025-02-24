@@ -7,5 +7,5 @@ In questa breve introduzione utilizzeremo OpenCV, un software gratuito, per effe
  - Una volta creato il nostro dataset dovremo creare il nostro modello vero e proprio: un file che verrà poi utilizzato dalla nostra IA per riconoscerci più rapidamente, senza dover ricorrere alle foto
  - Si potrà infine eseguire il riconoscimento del nostro volto
 
-**Referenzee**
+**Referenze**
  Per sviluppare questa DEMO è stato utilizzato il linguaggio di programmazione [Python](https://www.python.org/) e [OpenCV](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html) 
