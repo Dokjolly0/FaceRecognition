@@ -1,63 +1,59 @@
 import cv2
 import os
 
+# Carica il file XML per il riconoscimento facciale
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-# video_capture = cv2.VideoCapture(0)
 
-# Call the trained model yml file to recognize faces
+# Carica il modello addestrato
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read("training.yml")
 
-# Names corresponding to each id
-names = []
-for users in os.listdir("dataset"):
-    names.append(users)
+# Ottieni i nomi dagli ID nel dataset
+names = [user for user in os.listdir("dataset")]
 
-img = cv2.imread("test/chris.jpeg")
+# Avvia la webcam (0 = webcam integrata, 1 = webcam esterna)
+video_capture = cv2.VideoCapture(0)
+
+print("[INFO] Webcam avviata. Premi 'q' per uscire.")
 
 while True:
+    # Cattura un frame dal video
+    ret, frame = video_capture.read()
+    if not ret:
+        print("[ERRORE] Impossibile catturare il video.")
+        break
 
-    # _, img = video_capture.read()
+    # Converti il frame in scala di grigi
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Rileva i volti
+    faces = faceCascade.detectMultiScale(gray_frame, scaleFactor=1.2, minNeighbors=5, minSize=(100, 100))
 
-    faces = faceCascade.detectMultiScale(
-        gray_image, scaleFactor=1.2, minNeighbors=5, minSize=(100, 100)
-    )
-
-    # Try to predict the face and get the id
-    # Then check if id == 1 or id == 2
-    # Accordingly add the names
+    # Riconoscimento facciale con precisione
     for (x, y, w, h) in faces:
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        id, _ = recognizer.predict(gray_image[y : y + h, x : x + w])
-        if id:
-            cv2.putText(
-                img,
-                names[id - 1],
-                (x, y - 4),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.8,
-                (0, 255, 0),
-                1,
-                cv2.LINE_AA,
-            )
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        
+        # Predice l'ID e ottiene la confidenza
+        id, confidence = recognizer.predict(gray_frame[y:y+h, x:x+w])
+        
+        # Normalizza la precisione (100% = perfetto, 0% = incerto)
+        precision = max(0, min(100, 100 - confidence))  # Invertiamo il valore
+
+        if id and id - 1 < len(names) and precision>50:  # Verifica che l'ID sia valido e che ci sia una corrispondenza almeno del 50%
+            name = f"{names[id - 1]} ({precision:.2f}%)"
         else:
-            cv2.putText(
-                img,
-                "Unknown",
-                (x, y - 4),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.8,
-                (255, 0, 0),
-                1,
-                cv2.LINE_AA,
-            )
+            name = "Unknown"
 
-    cv2.imshow("Recognize", img)
+        # Mostra il nome e la precisione sul video
+        cv2.putText(frame, name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2, cv2.LINE_AA)
 
+    # Mostra il video in tempo reale
+    cv2.imshow("Recognize", frame)
+
+    # Premere 'q' per uscire
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
-# video_capture.release()
+# Rilascia la webcam e chiudi le finestre
+video_capture.release()
 cv2.destroyAllWindows()

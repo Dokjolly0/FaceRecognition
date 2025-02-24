@@ -3,75 +3,78 @@ import os
 
 from pathlib import Path
 
-# Initialize the classifier
+#Inizializzo il classificatore
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
-# Start the video camera
+#Avvio la videocamera
 vc = cv2.VideoCapture(0)
 
-# Get the userId and userName
-print("Enter the id and name of the person: ")
+#Leggo userID e userName
+print("Inserisci ID numero e nome della nuova persona da riconoscere: ")
 userId = input()
 userName = input()
 
-# Initially Count is = 1
+# Inizializzo un count per contare quante "foto" ho scattato
 count = 1
 
-# Function to save the image
+# Funzione per salvare le immagini
 def saveImage(image, userName, userId, imgId):
-    # Create a folder with the name as userName
+    # Creo una cartella
     Path("dataset/{}".format(userName)).mkdir(parents=True, exist_ok=True)
-    # Save the images inside the previously created folder
+    # Salvo le immagini
     cv2.imwrite("dataset/{}/{}_{}.jpg".format(userName, userId, imgId), image)
-    print("[INFO] Image {} has been saved in folder : {}".format(
+    print("[INFO] L'immagine {} è stata salvata nella cartella: {}".format(
         imgId, userName))
 
 
-print("[INFO] Video Capture is now starting please stay still...")
+print("[INFO] La cattura video si sta avviando, attendi...")
 
 while True:
-    # Capture the frame/image
+    # Cattura il frame
     _, img = vc.read()
 
-    # Copy the original Image
+    # Copia l'immagine originale
     originalImg = img.copy()
 
-    # Get the gray version of our image
+    # Rendo l'immagine grigia per ottimizzare il riconoscimetno
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # Get the coordinates of the location of the face in the picture
+    # Leggo le coordinate della faccia nella foto per salvare solo il volto
     faces = faceCascade.detectMultiScale(gray_img,
                                          scaleFactor=1.2,
                                          minNeighbors=5,
                                          minSize=(50, 50))
 
-    # Draw a rectangle at the location of the coordinates
+    # Disegno un rettangolo attorno al volto
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
         coords = [x, y, w, h]
+        # Controllo se almeno una coordinata esiste (se esiste una esistono tutte)
+        if x:
+            # Se ho meno di 1000 "foto" salvo una nuova foto del mio volto nel dataset 
+            if count <= 1000:
+                roi_img = originalImg[coords[1] : coords[1] + coords[3], coords[0] : coords[0] + coords[2]]
+                saveImage(roi_img, userName, userId, count)
+                count += 1
+            else:
+                break
 
-    # Show the image
-    cv2.imshow("Identified Face", img)
+    # Mostra il video in tempo reale
+    cv2.imshow("Recognize", img)
 
-    # Wait for user keypress
-    key = cv2.waitKey(1) & 0xFF
-
-    # Check if the pressed key is 'k' or 'q'
-    if key == ord('s'):
-        # If count is less than 5 then save the image
-        if count <= 5:
-            roi_img = originalImg[coords[1] : coords[1] + coords[3], coords[0] : coords[0] + coords[2]]
-            saveImage(roi_img, userName, userId, count)
-            count += 1
-        else:
-            break
-    # If q is pressed break out of the loop
-    elif key == ord('q'):
+    if count == 1000:
         break
 
-print("[INFO] Dataset has been created for {}".format(userName))
+    #Attende che l'utente prema un tasto
+    key = cv2.waitKey(1) & 0xFF
 
-# Stop the video camera
+    # Se l'utente preme q sulla tastiera interrompe il processo
+    if key == ord('q'):
+        break
+
+print("[INFO] Il dataset è stato creato per {}".format(userName))
+
+# Spegne la videocamera
 vc.release()
-# Close all Windows
+# Chiude la finestra
 cv2.destroyAllWindows()

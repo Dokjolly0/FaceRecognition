@@ -2,18 +2,17 @@ import os
 import cv2
 import numpy as np
 
-# Command: pip install pillow
-from PIL import Image
+from PIL import Image #pip install pillow opencv-contrib-python
 
-#Initialize names and path to empty list 
+#Inizializza nomi e percorsi come liste vuote
 names = []
 path = []
 
-# Get the names of all the users
+# Ricavo il nome di tutti gli utenti salvati
 for users in os.listdir("dataset"):
     names.append(users)
 
-# Get the path to all the images
+# Leggo la directory di tutte le foto
 for name in names:
     for image in os.listdir("dataset/{}".format(name)):
         path_string = os.path.join("dataset/{}".format(name), image)
@@ -23,7 +22,7 @@ for name in names:
 faces = []
 ids = []
 
-# For each image create a numpy array and add it to faces list
+#Per ogni immagine creo un array di tipo numpy e lo aggiungo all'elenco dei volti
 for img_path in path:
     image = Image.open(img_path).convert("L")
 
@@ -34,20 +33,17 @@ for img_path in path:
     faces.append(imgNp)
     ids.append(id)
 
-# Convert the ids to numpy array and add it to ids list
+#Converto gli id to array di tipo numpy a li aggiungo alla lista degli id
 ids = np.array(ids)
 
-print("[INFO] Created faces and names Numpy Arrays")
-print("[INFO] Initializing the Classifier")
+print("[INFO] Creati array numpy per facce e nomi")
+print("[INFO] Inizializzazione del classificatore")
 
-# Make sure contrib is installed
-# The command is pip install opencv-contrib-python
-
-# Call the recognizer
+#Chiamo il tool di riconoscimento
 trainer = cv2.face.LBPHFaceRecognizer_create()
-# Give the faces and ids numpy arrays
+#Gli passo gli array numpy per immagini e id
 trainer.train(faces, ids)
-# Write the generated model to a yml file
+#Scrivo il modello generato nel file training.yml
 trainer.write("training.yml")
 
-print("[INFO] Training Done")
+print("[INFO] Addestramento completato")
