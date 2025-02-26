@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 
-from PIL import Image #pip install pillow opencv-contrib-python
+from PIL import Image #pip install pillow opencv-contrib-python opencv-python
 
 #Inizializza nomi e percorsi come liste vuote
 names = []
