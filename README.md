@@ -8,4 +8,5 @@ In questa breve introduzione utilizzeremo OpenCV, un software gratuito, per effe
  - Si potrà infine eseguire il riconoscimento del nostro volto
 
 **Referenze**
- Per sviluppare questa DEMO è stato utilizzato il linguaggio di programmazione [Python](https://www.python.org/) e [OpenCV](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html) 
+ Per sviluppare questa DEMO è stato utilizzato il linguaggio di programmazione [Python](https://www.python.org/) e la libreria di [OpenCV](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html).
+ I file haarcascade possono essere scaricati da [qui](https://github.com/opencv/opencv/tree/master/data/haarcascades) 
