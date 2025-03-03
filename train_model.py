@@ -15,7 +15,7 @@ for users in os.listdir("dataset"):
 # Leggo la directory di tutte le foto
 for name in names:
     for image in os.listdir("dataset/{}".format(name)):
-        path_string = os.path.join("dataset/{}".format(name), image)
+        path_string = os.path.join("dataset", name, image)
         path.append(path_string)
 
 
@@ -28,7 +28,7 @@ for img_path in path:
 
     imgNp = np.array(image, "uint8")
 
-    id = int(img_path.split("/")[2].split("_")[0])
+    id = int(img_path.split("\\")[2].split("_")[0])
 
     faces.append(imgNp)
     ids.append(id)
